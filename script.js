@@ -4,7 +4,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, 800 / 600, 0.1, 2000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(window.devicePixelRatio); // Better mobile rendering
+renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(800, 600);
 document.getElementById("orbitScene").appendChild(renderer.domElement);
 
@@ -49,14 +49,14 @@ scene.add(sun);
 // Earth with blue color
 const earthGeometry = new THREE.SphereGeometry(15, 32, 32);
 const earthMaterial = new THREE.MeshPhongMaterial({
-  color: 0x0077ff, // Bright blue color
+  color: 0x0077ff,
   shininess: 25,
   specular: 0x444444,
 });
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 scene.add(earth);
 
-// Moon with grey color - Updated size and material
+// Moon with grey color
 const moonGeometry = new THREE.SphereGeometry(8, 32, 32);
 const moonMaterial = new THREE.MeshPhongMaterial({
   color: 0xdddddd,
@@ -89,43 +89,26 @@ function createHelicalPath(radius, height, turns, points) {
   return curve;
 }
 
-// Earth's orbit
-const earthOrbitPath = createHelicalPath(200, 100, 1, 500);
+// Earth's orbit - Updated to 4 years and white color
+const earthOrbitPath = createHelicalPath(200, 100, 4, 2000); // Increased turns to 4, more points for smoothness
 const earthOrbitGeometry = new THREE.TubeGeometry(
   earthOrbitPath,
-  500,
+  2000,
   1,
   8,
   false
 );
 const earthOrbitMaterial = new THREE.MeshBasicMaterial({
-  color: 0x444444,
+  color: 0xffffff, // Changed to white
   transparent: true,
-  opacity: 0.5,
+  opacity: 0.3,
 });
 const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
 scene.add(earthOrbit);
 
-// Moon's orbit - Updated radius and height
-const moonOrbitPath = createHelicalPath(60, 30, 12, 500);
-const moonOrbitGeometry = new THREE.TubeGeometry(
-  moonOrbitPath,
-  500,
-  0.5,
-  8,
-  false
-);
-const moonOrbitMaterial = new THREE.MeshBasicMaterial({
-  color: 0x444444,
-  transparent: true,
-  opacity: 0.5,
-});
-const moonOrbit = new THREE.Mesh(moonOrbitGeometry, moonOrbitMaterial);
-scene.add(moonOrbit);
-
 // Animation parameters
 const daysPerYear = 365.25;
-const daysPerMonth = 29.5;
+const daysPerMonth = 29.5 * 3; // Slowed down moon rotation by factor of 3
 
 let isPlaying = false;
 let currentDay = 0;
@@ -138,23 +121,26 @@ const timeSlider = document.getElementById("timeSlider");
 const speedSlider = document.getElementById("speedSlider");
 const timeDisplay = document.getElementById("timeDisplay");
 
+// Update time slider max value for 4 years
+timeSlider.max = daysPerYear * 4;
+
 function updateScene() {
-  const yearProgress = currentDay / daysPerYear;
+  const totalDays = daysPerYear * 4; // Total days for 4 years
+  const yearProgress = (currentDay % totalDays) / totalDays;
   const monthProgress = (currentDay % daysPerMonth) / daysPerMonth;
 
   // Update Earth position
   const earthPoint = earthOrbitPath.getPoint(yearProgress);
   earth.position.copy(earthPoint);
 
-  // Update Moon position - Increased scale factor
-  const moonPoint = moonOrbitPath.getPoint(monthProgress);
+  // Update Moon position - simplified orbit
+  const moonAngle = monthProgress * Math.PI * 2;
+  const moonRadius = 40; // Distance from Earth
   moon.position.set(
-    earthPoint.x + moonPoint.x * 0.3,
-    earthPoint.y + moonPoint.y * 0.3,
-    earthPoint.z + moonPoint.z * 0.3
+    earthPoint.x + Math.cos(moonAngle) * moonRadius,
+    earthPoint.y,
+    earthPoint.z + Math.sin(moonAngle) * moonRadius
   );
-
-  moonOrbit.position.copy(earth.position);
 
   // Update time display
   const years = Math.floor(currentDay / daysPerYear);
@@ -166,14 +152,14 @@ function updateScene() {
 function animate() {
   if (isPlaying) {
     requestAnimationFrame(animate);
-    currentDay = (currentDay + animationSpeed) % daysPerYear;
+    currentDay = (currentDay + animationSpeed) % (daysPerYear * 4); // Updated for 4 years
     timeSlider.value = currentDay;
     updateScene();
     renderer.render(scene, camera);
   }
 }
 
-// Camera and controls setup - Updated positions
+// Camera and controls setup
 camera.position.set(500, 250, 500);
 camera.lookAt(0, 0, 0);
 
@@ -226,23 +212,21 @@ function renderLoop() {
   renderer.render(scene, camera);
 }
 
-// Updated resize handler
 window.addEventListener("resize", () => {
   const container = document.getElementById("orbitScene");
   const width = container.clientWidth;
   const height = container.clientHeight;
-
+  
   renderer.setSize(width, height);
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
-
-  // Adjust camera position based on screen size
+  
   if (width < 768) {
     camera.position.set(500, 250, 500);
   } else {
     camera.position.set(400, 200, 400);
   }
-
+  
   camera.lookAt(0, 0, 0);
 });
 
