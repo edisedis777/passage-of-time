@@ -1,0 +1,84 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  text-align: center;
+  width: 100%;
+  max-width: 900px;
+}
+
+#orbitScene {
+  width: 100%;
+  height: 600px;
+  max-width: 800px;
+  margin: 0 auto;
+  border: 1px solid #fff;
+}
+
+.controls {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+button,
+input[type="range"],
+label {
+  margin: 0 5px;
+  padding: 5px 10px;
+  font-size: 16px;
+}
+
+#timeDisplay {
+  color: #fff;
+  font-size: 18px;
+  flex-basis: 100%;
+  margin-top: 10px;
+}
+
+#orbitScene::before {
+  content: "";
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  background: white;
+  box-shadow: 100px 60px white, 200px 120px white, 300px 80px white,
+    400px 150px white, 500px 90px white;
+  animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  #orbitScene {
+    height: 400px;
+  }
+  .controls {
+    flex-direction: column;
+    align-items: center;
+  }
+  button,
+  input[type="range"],
+  label {
+    margin: 5px 0;
+    width: 80%;
+    max-width: 200px;
+  }
+}
