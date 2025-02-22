@@ -1,7 +1,5 @@
 # Passage of Time
 
-## Demo [here](https://edisedis777.github.io/passage-of-time/)
-
 <img width="835" alt="Screenshot 2025-02-22 at 13 28 35" src="https://github.com/user-attachments/assets/86706c1a-d2a8-4949-9a35-7ec6af03cfe2" />
 
 
@@ -23,6 +21,7 @@ Starry Background: A simple starry effect to enhance the space theme.
 Accessibility: Includes ARIA labels and keyboard controls for better usability.
 Responsive Design: Optimized for both desktop and mobile devices.
 
+### Demo [here](https://edisedis777.github.io/passage-of-time/)
 
 ### Installation
 To run this project locally, follow these steps:
