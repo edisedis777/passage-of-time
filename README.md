@@ -1,9 +1,9 @@
-# Earth and Moon Motions
+# Passage of Time
 
 <img width="835" alt="Screenshot 2025-02-22 at 13 28 35" src="https://github.com/user-attachments/assets/86706c1a-d2a8-4949-9a35-7ec6af03cfe2" />
 
 
-## Welcome to the Earth, Moon, and Sun 3D Animation project! This interactive web application visualizes the orbital paths of the Earth and Moon around the Sun in a 3D environment, simulating their helical motion over time. It uses Three.js for 3D rendering and provides an engaging, educational experience for astronomy enthusiasts.
+## Welcome to the Passage of Time 3D Animation project! This interactive web application visualizes the orbital paths of the Earth and Moon around the Sun in a 3D environment, simulating their helical motion over time. It uses Three.js for 3D rendering and provides an engaging, educational experience for astronomy enthusiasts.
 
 ### Overview
 This project creates a dynamic 3D animation showing:
@@ -31,7 +31,7 @@ bash
 Wrap
 Copy
 git clone <repository-url>
-cd earth-and-moon-motions
+cd passage-of-time
 If not, create a new folder and download the files manually.
 
 ##### Set Up a Local Web Server
@@ -55,7 +55,7 @@ Reset Button: Reset the animation to Day 0 (also use the ‘r’ key).
 Time Slider (Days): Adjust the current day (0–365) to view specific positions.
 Speed Slider: Adjust the animation speed (0.1x to 2x).
 The starry background and celestial bodies (Sun, Earth, Moon) should be visible, with gray orbit lines showing their paths. 
-Click "Play" to see the animation of helical orbits.
+Click **"Play"** to see the animation of helical orbits.
 
 ### Prerequisites
 A modern web browser (e.g., Chrome, Firefox, Edge, versions from 2023 or later) with WebGL enabled.
@@ -79,7 +79,7 @@ Make your changes and commit them:
 bash
 Wrap
 Copy
-git commit -m "Add your descriptive message"
+git commit -m "Add your message"
 Push to the branch and submit a pull request.
 Please follow the code style and include tests or documentation for new features.
 
