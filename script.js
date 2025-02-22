@@ -4,6 +4,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, 800 / 600, 0.1, 2000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio); // Better mobile rendering
 renderer.setSize(800, 600);
 document.getElementById("orbitScene").appendChild(renderer.domElement);
 
@@ -55,12 +56,12 @@ const earthMaterial = new THREE.MeshPhongMaterial({
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 scene.add(earth);
 
-// Moon with grey color
-const moonGeometry = new THREE.SphereGeometry(5, 32, 32);
+// Moon with grey color - Updated size and material
+const moonGeometry = new THREE.SphereGeometry(8, 32, 32);
 const moonMaterial = new THREE.MeshPhongMaterial({
-  color: 0xcccccc, // Light grey color
-  shininess: 15,
-  specular: 0x333333,
+  color: 0xdddddd,
+  shininess: 20,
+  specular: 0x555555,
 });
 const moon = new THREE.Mesh(moonGeometry, moonMaterial);
 scene.add(moon);
@@ -105,8 +106,8 @@ const earthOrbitMaterial = new THREE.MeshBasicMaterial({
 const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
 scene.add(earthOrbit);
 
-// Moon's orbit
-const moonOrbitPath = createHelicalPath(40, 20, 12, 500);
+// Moon's orbit - Updated radius and height
+const moonOrbitPath = createHelicalPath(60, 30, 12, 500);
 const moonOrbitGeometry = new THREE.TubeGeometry(
   moonOrbitPath,
   500,
@@ -145,12 +146,12 @@ function updateScene() {
   const earthPoint = earthOrbitPath.getPoint(yearProgress);
   earth.position.copy(earthPoint);
 
-  // Update Moon position
+  // Update Moon position - Increased scale factor
   const moonPoint = moonOrbitPath.getPoint(monthProgress);
   moon.position.set(
-    earthPoint.x + moonPoint.x * 0.2,
-    earthPoint.y + moonPoint.y * 0.2,
-    earthPoint.z + moonPoint.z * 0.2
+    earthPoint.x + moonPoint.x * 0.3,
+    earthPoint.y + moonPoint.y * 0.3,
+    earthPoint.z + moonPoint.z * 0.3
   );
 
   moonOrbit.position.copy(earth.position);
@@ -172,16 +173,16 @@ function animate() {
   }
 }
 
-// Camera and controls setup
-camera.position.set(400, 200, 400);
+// Camera and controls setup - Updated positions
+camera.position.set(500, 250, 500);
 camera.lookAt(0, 0, 0);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.screenSpacePanning = false;
-controls.minDistance = 100;
-controls.maxDistance = 1000;
+controls.minDistance = 200;
+controls.maxDistance = 1200;
 
 // Event listeners
 playPauseBtn.addEventListener("click", () => {
@@ -225,12 +226,24 @@ function renderLoop() {
   renderer.render(scene, camera);
 }
 
+// Updated resize handler
 window.addEventListener("resize", () => {
-  const width = document.getElementById("orbitScene").clientWidth;
-  const height = 600;
+  const container = document.getElementById("orbitScene");
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+
   renderer.setSize(width, height);
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
+
+  // Adjust camera position based on screen size
+  if (width < 768) {
+    camera.position.set(500, 250, 500);
+  } else {
+    camera.position.set(400, 200, 400);
+  }
+
+  camera.lookAt(0, 0, 0);
 });
 
 // Initialize
