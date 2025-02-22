@@ -1,6 +1,8 @@
 # Passage of Time
 
 <img width="835" alt="Screenshot 2025-02-22 at 13 28 35" src="https://github.com/user-attachments/assets/86706c1a-d2a8-4949-9a35-7ec6af03cfe2" />
+![Screenshot 2025-02-22 at 21 36 48](https://github.com/user-attachments/assets/cecbe010-e121-4fdd-aca8-a4ff20180006)
+
 
 
 ## Welcome to the Passage of Time 3D Animation project! This interactive web application visualizes the orbital paths of the Earth and Moon around the Sun in a 3D environment, simulating their helical motion over time. It uses Three.js for 3D rendering and provides an engaging, educational experience for astronomy enthusiasts.
