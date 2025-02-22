@@ -12,7 +12,7 @@
 This project creates a dynamic 3D animation showing:
 
 The Sun (yellow) at the center.
-The Earth (brown) orbiting the Sun in an elliptical path, completing one orbit in 365.25 days.
+The Earth (blue) orbiting the Sun in an elliptical path, completing one orbit in 365.25 days.
 The Moon (gray) orbiting the Earth, completing one orbit in approximately 29.5 days.
 Gray orbit lines for both the Earth’s and Moon’s paths, simulating a helical motion in 3D space.
 Users can control the animation with play/pause, reset, time slider, and speed adjustment features, all styled with a retro, illustrative aesthetic inspired by the provided image.
