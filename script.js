@@ -6,13 +6,21 @@ const camera = new THREE.PerspectiveCamera(75, 800 / 600, 0.1, 2000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(800, 600);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.getElementById("orbitScene").appendChild(renderer.domElement);
 
 // Enhanced lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
 scene.add(ambientLight);
 const sunLight = new THREE.PointLight(0xffffff, 2, 1000);
+sunLight.castShadow = true;
 scene.add(sunLight);
+
+// Add directional light for better 3D effect
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+dirLight.position.set(100, 100, 100);
+scene.add(dirLight);
 
 // Starry background
 scene.background = new THREE.Color(0x000000);
@@ -36,37 +44,46 @@ starsGeometry.setAttribute(
 const stars = new THREE.Points(starsGeometry, starsMaterial);
 scene.add(stars);
 
-// Sun
-const sunGeometry = new THREE.SphereGeometry(30, 32, 32);
-const sunMaterial = new THREE.MeshBasicMaterial({
+// Enhanced Sun
+const sunGeometry = new THREE.SphereGeometry(30, 64, 64); // Increased segments
+const sunMaterial = new THREE.MeshStandardMaterial({
   color: 0xffff00,
   emissive: 0xffff00,
+  emissiveIntensity: 1,
+  roughness: 0.2,
+  metalness: 0.5,
 });
 const sun = new THREE.Mesh(sunGeometry, sunMaterial);
 sunLight.position.copy(sun.position);
 scene.add(sun);
 
-// Earth with blue color
-const earthGeometry = new THREE.SphereGeometry(15, 32, 32);
-const earthMaterial = new THREE.MeshPhongMaterial({
+// Enhanced Earth
+const earthGeometry = new THREE.SphereGeometry(15, 64, 64); // Increased segments
+const earthMaterial = new THREE.MeshStandardMaterial({
   color: 0x0077ff,
-  shininess: 25,
-  specular: 0x444444,
+  roughness: 0.7,
+  metalness: 0.1,
+  normalScale: new THREE.Vector2(1, 1),
 });
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+earth.castShadow = true;
+earth.receiveShadow = true;
 scene.add(earth);
 
-// Moon with grey color
-const moonGeometry = new THREE.SphereGeometry(8, 32, 32);
-const moonMaterial = new THREE.MeshPhongMaterial({
+// Enhanced Moon
+const moonGeometry = new THREE.SphereGeometry(8, 64, 64); // Increased segments
+const moonMaterial = new THREE.MeshStandardMaterial({
   color: 0xdddddd,
-  shininess: 20,
-  specular: 0x555555,
+  roughness: 0.8,
+  metalness: 0.1,
+  normalScale: new THREE.Vector2(1, 1),
 });
 const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+moon.castShadow = true;
+moon.receiveShadow = true;
 scene.add(moon);
 
-// Create helical paths
+// Create helical paths (rest of the path creation code remains the same)
 function createHelicalPath(radius, height, turns, points) {
   const curve = new THREE.CurvePath();
   const segments = points || 360;
@@ -89,8 +106,8 @@ function createHelicalPath(radius, height, turns, points) {
   return curve;
 }
 
-// Earth's orbit - Updated to 4 years and white color
-const earthOrbitPath = createHelicalPath(200, 100, 4, 2000); // Increased turns to 4, more points for smoothness
+// Earth's orbit
+const earthOrbitPath = createHelicalPath(200, 100, 4, 2000);
 const earthOrbitGeometry = new THREE.TubeGeometry(
   earthOrbitPath,
   2000,
@@ -99,16 +116,19 @@ const earthOrbitGeometry = new THREE.TubeGeometry(
   false
 );
 const earthOrbitMaterial = new THREE.MeshBasicMaterial({
-  color: 0xffffff, // Changed to white
+  color: 0xffffff,
   transparent: true,
   opacity: 0.3,
 });
 const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
 scene.add(earthOrbit);
 
-// Animation parameters
-const daysPerYear = 365.25;
-const daysPerMonth = 29.5 * 3; // Slowed down moon rotation by factor of 3
+// Updated time constants
+const DAYS_PER_MONTH = 30;
+const MONTHS_PER_YEAR = 12;
+const DAYS_PER_YEAR = DAYS_PER_MONTH * MONTHS_PER_YEAR; // 360 days
+const TOTAL_YEARS = 4;
+const TOTAL_DAYS = DAYS_PER_YEAR * TOTAL_YEARS;
 
 let isPlaying = false;
 let currentDay = 0;
@@ -122,20 +142,19 @@ const speedSlider = document.getElementById("speedSlider");
 const timeDisplay = document.getElementById("timeDisplay");
 
 // Update time slider max value for 4 years
-timeSlider.max = daysPerYear * 4;
+timeSlider.max = TOTAL_DAYS;
 
 function updateScene() {
-  const totalDays = daysPerYear * 4; // Total days for 4 years
-  const yearProgress = (currentDay % totalDays) / totalDays;
-  const monthProgress = (currentDay % daysPerMonth) / daysPerMonth;
+  const yearProgress = (currentDay % TOTAL_DAYS) / TOTAL_DAYS;
+  const moonProgress = (currentDay % DAYS_PER_MONTH) / DAYS_PER_MONTH;
 
   // Update Earth position
   const earthPoint = earthOrbitPath.getPoint(yearProgress);
   earth.position.copy(earthPoint);
 
-  // Update Moon position - simplified orbit
-  const moonAngle = monthProgress * Math.PI * 2;
-  const moonRadius = 40; // Distance from Earth
+  // Update Moon position
+  const moonAngle = moonProgress * Math.PI * 2;
+  const moonRadius = 40;
   moon.position.set(
     earthPoint.x + Math.cos(moonAngle) * moonRadius,
     earthPoint.y,
@@ -143,23 +162,25 @@ function updateScene() {
   );
 
   // Update time display
-  const years = Math.floor(currentDay / daysPerYear);
-  const months = Math.floor((currentDay % daysPerYear) / daysPerMonth);
-  const days = Math.floor(currentDay % daysPerMonth);
-  timeDisplay.textContent = `Year ${years}, Month ${months + 1}, Day ${days}`;
+  const years = Math.floor(currentDay / DAYS_PER_YEAR);
+  const months = Math.floor((currentDay % DAYS_PER_YEAR) / DAYS_PER_MONTH);
+  const days = Math.floor(currentDay % DAYS_PER_MONTH);
+  timeDisplay.textContent = `Year ${years + 1}, Month ${months + 1}, Day ${
+    days + 1
+  }`;
 }
 
 function animate() {
   if (isPlaying) {
     requestAnimationFrame(animate);
-    currentDay = (currentDay + animationSpeed) % (daysPerYear * 4); // Updated for 4 years
+    currentDay = (currentDay + animationSpeed) % TOTAL_DAYS;
     timeSlider.value = currentDay;
     updateScene();
     renderer.render(scene, camera);
   }
 }
 
-// Camera and controls setup
+// Rest of the code (camera setup, controls, event listeners) remains the same
 camera.position.set(500, 250, 500);
 camera.lookAt(0, 0, 0);
 
@@ -170,7 +191,6 @@ controls.screenSpacePanning = false;
 controls.minDistance = 200;
 controls.maxDistance = 1200;
 
-// Event listeners
 playPauseBtn.addEventListener("click", () => {
   isPlaying = !isPlaying;
   playPauseBtn.textContent = isPlaying ? "Pause" : "Play";
@@ -216,17 +236,17 @@ window.addEventListener("resize", () => {
   const container = document.getElementById("orbitScene");
   const width = container.clientWidth;
   const height = container.clientHeight;
-  
+
   renderer.setSize(width, height);
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
-  
+
   if (width < 768) {
     camera.position.set(500, 250, 500);
   } else {
     camera.position.set(400, 200, 400);
   }
-  
+
   camera.lookAt(0, 0, 0);
 });
 
