@@ -45,7 +45,7 @@ const stars = new THREE.Points(starsGeometry, starsMaterial);
 scene.add(stars);
 
 // Enhanced Sun
-const sunGeometry = new THREE.SphereGeometry(30, 64, 64); // Increased segments
+const sunGeometry = new THREE.SphereGeometry(30, 64, 64);
 const sunMaterial = new THREE.MeshStandardMaterial({
   color: 0xffff00,
   emissive: 0xffff00,
@@ -58,7 +58,7 @@ sunLight.position.copy(sun.position);
 scene.add(sun);
 
 // Enhanced Earth
-const earthGeometry = new THREE.SphereGeometry(15, 64, 64); // Increased segments
+const earthGeometry = new THREE.SphereGeometry(15, 64, 64);
 const earthMaterial = new THREE.MeshStandardMaterial({
   color: 0x0077ff,
   roughness: 0.7,
@@ -71,7 +71,7 @@ earth.receiveShadow = true;
 scene.add(earth);
 
 // Enhanced Moon
-const moonGeometry = new THREE.SphereGeometry(8, 64, 64); // Increased segments
+const moonGeometry = new THREE.SphereGeometry(8, 64, 64);
 const moonMaterial = new THREE.MeshStandardMaterial({
   color: 0xdddddd,
   roughness: 0.8,
@@ -83,7 +83,7 @@ moon.castShadow = true;
 moon.receiveShadow = true;
 scene.add(moon);
 
-// Create helical paths (rest of the path creation code remains the same)
+// Create helical paths
 function createHelicalPath(radius, height, turns, points) {
   const curve = new THREE.CurvePath();
   const segments = points || 360;
@@ -123,6 +123,30 @@ const earthOrbitMaterial = new THREE.MeshBasicMaterial({
 const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
 scene.add(earthOrbit);
 
+// Create moon's orbit ring
+function createMoonOrbitRing() {
+  const radius = 40;
+  const tube = 0.5;
+  const tubularSegments = 48;
+  const radialSegments = 8;
+  const geometry = new THREE.TorusGeometry(
+    radius,
+    tube,
+    radialSegments,
+    tubularSegments
+  );
+  const material = new THREE.MeshBasicMaterial({
+    color: 0xff6600, // Orange color
+    transparent: false, // Removed transparency
+  });
+  const ring = new THREE.Mesh(geometry, material);
+  ring.rotation.z = Math.PI / 2; // Rotated to match vertical orbit
+  return ring;
+}
+
+const moonOrbit = createMoonOrbitRing();
+scene.add(moonOrbit);
+
 // Updated time constants
 const DAYS_PER_MONTH = 30;
 const MONTHS_PER_YEAR = 12;
@@ -152,13 +176,16 @@ function updateScene() {
   const earthPoint = earthOrbitPath.getPoint(yearProgress);
   earth.position.copy(earthPoint);
 
+  // Update Moon orbit ring position
+  moonOrbit.position.copy(earthPoint);
+
   // Update Moon position
   const moonAngle = moonProgress * Math.PI * 2;
   const moonRadius = 40;
   moon.position.set(
     earthPoint.x + Math.cos(moonAngle) * moonRadius,
-    earthPoint.y,
-    earthPoint.z + Math.sin(moonAngle) * moonRadius
+    earthPoint.y + Math.sin(moonAngle) * moonRadius,
+    earthPoint.z
   );
 
   // Update time display
@@ -180,7 +207,7 @@ function animate() {
   }
 }
 
-// Rest of the code (camera setup, controls, event listeners) remains the same
+// Camera and controls setup
 camera.position.set(500, 250, 500);
 camera.lookAt(0, 0, 0);
 
