@@ -123,28 +123,48 @@ const earthOrbitMaterial = new THREE.MeshBasicMaterial({
 const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
 scene.add(earthOrbit);
 
-// Create moon's orbit ring
-function createMoonOrbitRing() {
-  const radius = 40;
-  const tube = 0.5;
-  const tubularSegments = 48;
-  const radialSegments = 8;
-  const geometry = new THREE.TorusGeometry(
-    radius,
-    tube,
-    radialSegments,
-    tubularSegments
-  );
-  const material = new THREE.MeshBasicMaterial({
-    color: 0xff6600, // Orange color
-    transparent: false, // Removed transparency
-  });
-  const ring = new THREE.Mesh(geometry, material);
-  ring.rotation.z = Math.PI / 2; // Rotated to match vertical orbit
-  return ring;
+// Create spiral path around a curve
+function createSpiralAroundPath(mainPath, radius, turns, points) {
+  const curve = new THREE.CurvePath();
+  const segments = points || 360;
+  const vertices = [];
+
+  for (let i = 0; i <= segments; i++) {
+    const t = i / segments;
+    const mainPoint = mainPath.getPoint(t);
+    const angle = t * Math.PI * 2 * turns;
+
+    // Create spiral around the main path
+    const x = mainPoint.x + radius * Math.cos(angle);
+    const y = mainPoint.y + radius * Math.sin(angle);
+    const z = mainPoint.z;
+
+    vertices.push(new THREE.Vector3(x, y, z));
+  }
+
+  for (let i = 0; i < vertices.length - 1; i++) {
+    const lineCurve = new THREE.LineCurve3(vertices[i], vertices[i + 1]);
+    curve.add(lineCurve);
+  }
+
+  return curve;
 }
 
-const moonOrbit = createMoonOrbitRing();
+// Moon's spiral orbit around Earth's path
+const moonOrbitPath = createSpiralAroundPath(earthOrbitPath, 40, 48, 2000);
+const moonOrbitGeometry = new THREE.TubeGeometry(
+  moonOrbitPath,
+  2000,
+  0.5,
+  8,
+  false
+);
+const moonOrbitMaterial = new THREE.MeshBasicMaterial({
+  color: 0xff6600,
+  transparent: true,
+  opacity: 0.3,
+});
+const moonOrbit = new THREE.Mesh(moonOrbitGeometry, moonOrbitMaterial);
 scene.add(moonOrbit);
 
 // Updated time constants
@@ -176,17 +196,9 @@ function updateScene() {
   const earthPoint = earthOrbitPath.getPoint(yearProgress);
   earth.position.copy(earthPoint);
 
-  // Update Moon orbit ring position
-  moonOrbit.position.copy(earthPoint);
-
-  // Update Moon position
-  const moonAngle = moonProgress * Math.PI * 2;
-  const moonRadius = 40;
-  moon.position.set(
-    earthPoint.x + Math.cos(moonAngle) * moonRadius,
-    earthPoint.y + Math.sin(moonAngle) * moonRadius,
-    earthPoint.z
-  );
+  // Update Moon position using its spiral path
+  const moonPoint = moonOrbitPath.getPoint(yearProgress);
+  moon.position.copy(moonPoint);
 
   // Update time display
   const years = Math.floor(currentDay / DAYS_PER_YEAR);
