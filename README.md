@@ -1,7 +1,6 @@
 # Passage of Time
 
-<img width="835" alt="Screenshot 2025-02-22 at 13 28 35" src="https://github.com/user-attachments/assets/5c634ee5-caff-4d0c-901d-78cc4dc6ee70" />
-
+<img width="835" alt="Screenshot 2025-02-22 at 13 28 35" src="https://github.com/user-attachments/assets/ed9b5d53-4cbe-45ea-8f4b-fe8babe2892b" />
 
 
 
