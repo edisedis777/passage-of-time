@@ -10,10 +10,10 @@
 This project creates a dynamic 3D animation showing:
 
 The Sun (yellow) at the center.
-The Earth (blue) orbiting the Sun in an elliptical path, completing one orbit in 365.25 days.
-The Moon (gray) orbiting the Earth, completing one orbit in approximately 29.5 days.
-Gray orbit lines for both the Earth’s and Moon’s paths, simulating a helical motion in 3D space.
-Users can control the animation with play/pause, reset, time slider, and speed adjustment features, all styled with a retro, illustrative aesthetic inspired by the provided image.
+The Earth (blue) orbiting the Sun in an elliptical path, completing one orbit in 360 days (for simplification purposes).
+The Moon (gray) orbiting the Earth, completing one orbit in 30 days (for simplification purposes).
+Gray orbit lines for the Earth’s path, and Orange orbit lines for the Moon's path, simulating a helical motion in 3D space.
+Users can control the animation with play/pause, reset, time slider, and speed adjustment features.
 
 ### Features
 3D Visualization: Uses Three.js to render a 3D scene with helical orbits.
@@ -54,7 +54,7 @@ Open index.html in a web browser via a local web server.
 Use the controls at the bottom to interact with the animation:
 Play/Pause Button: Start or stop the animation (also toggle with the spacebar).
 Reset Button: Reset the animation to Day 0 (also use the ‘r’ key).
-Time Slider (Days): Adjust the current day (0–365) to view specific positions.
+Time Slider (Days): Adjust the current day (0–360) to view specific positions.
 Speed Slider: Adjust the animation speed (0.1x to 2x).
 The starry background and celestial bodies (Sun, Earth, Moon) should be visible, with gray orbit lines showing their paths. 
 Click **"Play"** to see the animation of helical orbits.
