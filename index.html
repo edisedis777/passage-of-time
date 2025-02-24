@@ -2,7 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Earth, Moon, and Sun 3D Animation</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -10,25 +12,33 @@
     <div class="container">
       <div id="orbitScene"></div>
       <div class="controls" role="toolbar" aria-label="Animation Controls">
-        <button id="playPause" aria-label="Play/Pause Animation">Play</button>
-        <button id="reset" aria-label="Reset Animation">Reset</button>
-        <label for="timeSlider">Time (Days):</label>
-        <input
-          type="range"
-          id="timeSlider"
-          min="0"
-          max="365"
-          value="0"
-          aria-valuetext="Day 0" />
-        <label for="speedSlider">Animation Speed:</label>
-        <input
-          type="range"
-          id="speedSlider"
-          min="0.1"
-          max="2"
-          step="0.1"
-          value="0.5"
-          aria-valuetext="Speed 0.5x" />
+        <div class="button-group">
+          <button id="playPause" aria-label="Play/Pause Animation">Play</button>
+          <button id="reset" aria-label="Reset Animation">Reset</button>
+        </div>
+        <div class="slider-group">
+          <div class="slider-container">
+            <label for="timeSlider">Time (Days):</label>
+            <input
+              type="range"
+              id="timeSlider"
+              min="0"
+              max="365"
+              value="0"
+              aria-valuetext="Day 0" />
+          </div>
+          <div class="slider-container">
+            <label for="speedSlider">Animation Speed:</label>
+            <input
+              type="range"
+              id="speedSlider"
+              min="0.1"
+              max="2"
+              step="0.1"
+              value="0.5"
+              aria-valuetext="Speed 0.5x" />
+          </div>
+        </div>
         <span id="timeDisplay" aria-live="polite">Year 0, Month 1, Day 0</span>
       </div>
     </div>
