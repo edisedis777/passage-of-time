@@ -56,14 +56,14 @@ scene.add(stars);
 
 // Celestial bodies
 const sunGeometry = new THREE.SphereGeometry(
-  30,
+  150,
   window.innerWidth < 768 ? 32 : 64,
   window.innerWidth < 768 ? 32 : 64
 );
 const sunMaterial = new THREE.MeshStandardMaterial({
-  color: 0xffff00,
-  emissive: 0xffff00,
-  emissiveIntensity: 1,
+  color: 0xffcc00,
+  emissive: 0xffcc00,
+  emissiveIntensity: 0.5,
   roughness: 0.2,
   metalness: 0.5,
 });
@@ -125,7 +125,7 @@ function createHelicalPath(radius, height, turns, points) {
 }
 
 // Earth's orbit
-const earthOrbitPath = createHelicalPath(200, 100, 4, 2000);
+const earthOrbitPath = createHelicalPath(500, 400, 4, 2000);
 const earthOrbitGeometry = new THREE.TubeGeometry(
   earthOrbitPath,
   2000,
@@ -136,7 +136,7 @@ const earthOrbitGeometry = new THREE.TubeGeometry(
 const earthOrbitMaterial = new THREE.MeshBasicMaterial({
   color: 0xffffff,
   transparent: true,
-  opacity: 0.3,
+  opacity: 0.5,
 });
 const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
 scene.add(earthOrbit);
@@ -177,7 +177,7 @@ const moonOrbitGeometry = new THREE.TubeGeometry(
 const moonOrbitMaterial = new THREE.MeshBasicMaterial({
   color: 0xff6600,
   transparent: true,
-  opacity: 0.3,
+  opacity: 0.5,
 });
 const moonOrbit = new THREE.Mesh(moonOrbitGeometry, moonOrbitMaterial);
 scene.add(moonOrbit);
@@ -224,21 +224,102 @@ function updateScene() {
   }`;
 }
 
+// Create a reference line for one month (between month 5 and 6)
+function createReferenceLine(startPoint, endPoint, color, text) {
+  // Create the line
+  const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+    startPoint,
+    endPoint,
+  ]);
+  const lineMaterial = new THREE.LineBasicMaterial({
+    color: color,
+    linewidth: 2,
+  });
+  const line = new THREE.Line(lineGeometry, lineMaterial);
+  scene.add(line);
+
+  // Create text sprite
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  canvas.width = 256;
+  canvas.height = 128;
+  context.fillStyle = "#ffffff";
+  context.font = "Bold 48px Arial";
+  context.fillText(text, 10, 50);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+  const sprite = new THREE.Sprite(spriteMaterial);
+
+  // Position sprite at midpoint of line
+  sprite.position.set(
+    (startPoint.x + endPoint.x) / 2,
+    (startPoint.y + endPoint.y) / 2 + 10,
+    (startPoint.z + endPoint.z) / 2
+  );
+  sprite.scale.set(50, 25, 1);
+  scene.add(sprite);
+
+  return { line, sprite };
+}
+
+// Calculate points for month reference (between month 5 and 6)
+const month5Progress = (12 + 365 * 2) / TOTAL_DAYS; // During year 2
+const month6Progress = (40 + 365 * 2) / TOTAL_DAYS;
+const month5Point = moonOrbitPath.getPoint(month5Progress);
+const month6Point = moonOrbitPath.getPoint(month6Progress);
+
+// Create month reference line
+const monthReference = createReferenceLine(
+  month5Point,
+  month6Point,
+  0x00ff00, // Green color
+  "one month"
+);
+
+// Calculate points for year reference (between year 2 and 3)
+const year2Progress = (365 * 1) / TOTAL_DAYS;
+const year3Progress = (365 * 2) / TOTAL_DAYS;
+const year2Point = earthOrbitPath.getPoint(year2Progress);
+const year3Point = earthOrbitPath.getPoint(year3Progress);
+
+// Create year reference line
+const yearReference = createReferenceLine(
+  year2Point,
+  year3Point,
+  0x00ff00, // green color
+  "one year"
+);
+
+function updateReferenceLines() {
+  // Update month reference visibility
+  const monthOpacity = 0.8;
+  monthReference.line.material.opacity = monthOpacity;
+  monthReference.sprite.material.opacity = monthOpacity;
+
+  // Update year reference visibility
+  const yearOpacity = 0.8;
+  yearReference.line.material.opacity = yearOpacity;
+  yearReference.sprite.material.opacity = yearOpacity;
+}
+
+// Add this to your existing animate function
 function animate() {
   if (isPlaying) {
     requestAnimationFrame(animate);
     currentDay = (currentDay + animationSpeed) % TOTAL_DAYS;
     timeSlider.value = currentDay;
     updateScene();
+    updateReferenceLines(); // Add this line
     renderer.render(scene, camera);
   }
 }
 
 // Camera and controls setup
 camera.position.set(
-  window.innerWidth < 768 ? 600 : 500,
-  window.innerWidth < 768 ? 300 : 250,
-  window.innerWidth < 768 ? 600 : 500
+  window.innerWidth < 768 ? 800 : 700,
+  window.innerWidth < 768 ? 400 : 350,
+  window.innerWidth < 768 ? 800 : 700
 );
 camera.lookAt(0, 0, 0);
 
@@ -246,8 +327,8 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.screenSpacePanning = false;
-controls.minDistance = window.innerWidth < 768 ? 300 : 200;
-controls.maxDistance = window.innerWidth < 768 ? 800 : 1200;
+controls.minDistance = window.innerWidth < 768 ? 400 : 300;
+controls.maxDistance = window.innerWidth < 768 ? 1000 : 1400;
 controls.maxPolarAngle = Math.PI / 1.5;
 controls.minPolarAngle = Math.PI / 6;
 
@@ -302,13 +383,13 @@ window.addEventListener("resize", () => {
     camera.updateProjectionMatrix();
 
     if (width < 768) {
-      camera.position.set(600, 300, 600);
-      controls.minDistance = 300;
-      controls.maxDistance = 800;
+      camera.position.set(800, 400, 800);
+      controls.minDistance = 400;
+      controls.maxDistance = 1000;
     } else {
-      camera.position.set(500, 250, 500);
-      controls.minDistance = 200;
-      controls.maxDistance = 1200;
+      camera.position.set(700, 350, 700);
+      controls.minDistance = 300;
+      controls.maxDistance = 1400;
     }
 
     camera.lookAt(0, 0, 0);
