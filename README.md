@@ -1,4 +1,4 @@
-# Passage of Time
+# Passage-of-Time
 [![Visual Studio Code](https://custom-icon-badges.demolab.com/badge/Visual%20Studio%20Code-0078d7.svg?logo=vsc&logoColor=white)](#)
 [![HTML](https://img.shields.io/badge/HTML-%23E34F26.svg?logo=html5&logoColor=white)](#)
 [![CSS](https://img.shields.io/badge/CSS-1572B6?logo=css3&logoColor=fff)](#)
@@ -94,3 +94,8 @@ The project uses CDN-hosted Three.js and OrbitControls libraries, so an active i
 - Inspired by a retro-style image of Earth, Moon, and Sun orbits, from [here](https://archive.org/details/yousciencescienc00bran/page/172/mode/1up).
 
 <img width="570" alt="Screenshot 2025-02-22 at 13 38 27" src="https://github.com/user-attachments/assets/fa469fe3-e2e3-4aa1-b2d7-5cb644da39dd" />
+
+<div align="right">
+
+[Back To Top ⬆️](#Passage-of-Time)
+</div>
