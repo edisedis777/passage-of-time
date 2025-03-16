@@ -92,7 +92,8 @@ The project uses CDN-hosted Three.js and OrbitControls libraries, so an active i
 
 ### Acknowledgements
 - Built using Three.js for 3D rendering.
-- Inspired by a retro-style image of Earth, Moon, and Sun orbits, from [here](https://archive.org/details/yousciencescienc00bran/page/172/mode/1up).
+- Images from [SolarSystemScope](https://www.solarsystemscope.com/textures/)
+- Inspired by a retro-style image of Earth, Moon, and Sun orbits, from [a 1960's science textbook illustration](https://archive.org/details/yousciencescienc00bran/page/172/mode/1up)
 
 <img width="570" alt="Screenshot 2025-02-22 at 13 38 27" src="https://github.com/user-attachments/assets/fa469fe3-e2e3-4aa1-b2d7-5cb644da39dd" />
 
