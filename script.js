@@ -54,6 +54,12 @@ starsGeometry.setAttribute(
 const stars = new THREE.Points(starsGeometry, starsMaterial);
 scene.add(stars);
 
+// Load textures
+const textureLoader = new THREE.TextureLoader();
+const sunTexture = textureLoader.load("images/sun.jpg"); // sun texture
+const earthTexture = textureLoader.load("images/earth.jpg"); // earth texture
+const moonTexture = textureLoader.load("images/moon.jpg"); // moon texture
+
 // Celestial bodies
 const sunGeometry = new THREE.SphereGeometry(
   150,
@@ -61,15 +67,29 @@ const sunGeometry = new THREE.SphereGeometry(
   window.innerWidth < 768 ? 32 : 64
 );
 const sunMaterial = new THREE.MeshStandardMaterial({
-  color: 0xffcc00,
+  map: sunTexture,
   emissive: 0xffcc00,
   emissiveIntensity: 0.5,
   roughness: 0.2,
   metalness: 0.5,
 });
+
 const sun = new THREE.Mesh(sunGeometry, sunMaterial);
 sunLight.position.copy(sun.position);
 scene.add(sun);
+
+// Create sun path cylinder
+const sunPathGeometry = new THREE.CylinderGeometry(130, 130, 400, 32); // Radius, radius, height
+const sunPathMaterial = new THREE.MeshBasicMaterial({
+  color: 0xff9900,
+  transparent: true,
+  opacity: 0.7,
+  side: THREE.DoubleSide,
+});
+const sunPath = new THREE.Mesh(sunPathGeometry, sunPathMaterial);
+sunPath.rotation.x = Math.PI / 100; // Rotate to horizontal position
+sunPath.position.set(0, -200, 0); // Position below the sun
+scene.add(sunPath);
 
 const earthGeometry = new THREE.SphereGeometry(
   15,
@@ -77,7 +97,7 @@ const earthGeometry = new THREE.SphereGeometry(
   window.innerWidth < 768 ? 32 : 64
 );
 const earthMaterial = new THREE.MeshStandardMaterial({
-  color: 0x0077ff,
+  map: earthTexture,
   roughness: 0.7,
   metalness: 0.1,
 });
@@ -92,7 +112,7 @@ const moonGeometry = new THREE.SphereGeometry(
   window.innerWidth < 768 ? 32 : 64
 );
 const moonMaterial = new THREE.MeshStandardMaterial({
-  color: 0xdddddd,
+  map: moonTexture,
   roughness: 0.8,
   metalness: 0.1,
 });
