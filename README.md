@@ -11,7 +11,8 @@
 
 This interactive web application visualizes the orbital paths of the Earth and Moon around the Sun in a 3D environment, simulating their helical motion over time. It uses Three.js for 3D rendering and provides an engaging, educational experience for astronomy enthusiasts.
 
-<img width="835" alt="Screenshot 2025-02-22 at 13 28 35" src="https://github.com/user-attachments/assets/3fc53bb4-9290-474b-82e6-cc599d2d3222" />
+
+![Screenshot 2025-03-16 at 14 07 02](https://github.com/user-attachments/assets/f2bedece-02c1-4783-98d8-3c412d709b3e)
 
 
 
