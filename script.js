@@ -335,11 +335,18 @@ function animate() {
   }
 }
 
+// Store initial camera position and orientation
+const initialCameraPosition = {
+  x: window.innerWidth < 768 ? 800 : 700,
+  y: window.innerWidth < 768 ? 400 : 350,
+  z: window.innerWidth < 768 ? 800 : 700,
+};
+
 // Camera and controls setup
 camera.position.set(
-  window.innerWidth < 768 ? 800 : 700,
-  window.innerWidth < 768 ? 400 : 350,
-  window.innerWidth < 768 ? 800 : 700
+  initialCameraPosition.x,
+  initialCameraPosition.y,
+  initialCameraPosition.z
 );
 camera.lookAt(0, 0, 0);
 
@@ -361,12 +368,25 @@ playPauseBtn.addEventListener("click", () => {
 });
 
 resetBtn.addEventListener("click", () => {
+  // Reset animation state
   isPlaying = false;
   playPauseBtn.textContent = "Play";
   playPauseBtn.setAttribute("aria-pressed", "false");
   currentDay = 0;
   timeSlider.value = 0;
+
+  // Reset camera position and controls
+  camera.position.set(
+    initialCameraPosition.x,
+    initialCameraPosition.y,
+    initialCameraPosition.z
+  );
+  camera.lookAt(0, 0, 0);
+  controls.reset(); // Reset orbit controls to initial state
+
+  // Update the scene
   updateScene();
+  renderer.render(scene, camera);
 });
 
 timeSlider.addEventListener("input", (e) => {
@@ -402,17 +422,30 @@ window.addEventListener("resize", () => {
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
 
+    // Update initial camera position based on screen size
     if (width < 768) {
-      camera.position.set(800, 400, 800);
+      initialCameraPosition.x = 800;
+      initialCameraPosition.y = 400;
+      initialCameraPosition.z = 800;
       controls.minDistance = 400;
       controls.maxDistance = 1000;
     } else {
-      camera.position.set(700, 350, 700);
+      initialCameraPosition.x = 700;
+      initialCameraPosition.y = 350;
+      initialCameraPosition.z = 700;
       controls.minDistance = 300;
       controls.maxDistance = 1400;
     }
 
-    camera.lookAt(0, 0, 0);
+    // Only reset camera position if not actively interacting with the scene
+    if (!controls.enabled) {
+      camera.position.set(
+        initialCameraPosition.x,
+        initialCameraPosition.y,
+        initialCameraPosition.z
+      );
+      camera.lookAt(0, 0, 0);
+    }
   }, 250);
 });
 
