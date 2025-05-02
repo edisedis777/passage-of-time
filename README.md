@@ -5,7 +5,6 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000)](#)
 [![Three.js](https://img.shields.io/badge/Three.js-000?logo=threedotjs&logoColor=fff)](#)
 [![Markdown](https://img.shields.io/badge/Markdown-%23000000.svg?logo=markdown&logoColor=white)](#)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 
 
@@ -86,15 +85,14 @@ The project uses CDN-hosted Three.js and OrbitControls libraries, so an active i
 ### Contributing
 - Contributions are welcome!
 
-
-### License
-- This project is licensed under the MIT License. See the LICENSE file for details.
-
 ### Acknowledgements
 - Built using Three.js for 3D rendering.
 - Images from [SolarSystemScope](https://www.solarsystemscope.com/textures/)
 - Inspired by a retro-style image of Earth, Moon, and Sun orbits, from a [1960's science textbook illustration](https://archive.org/details/yousciencescienc00bran/page/172/mode/1up)
 - and by this Video: https://www.youtube.com/watch?v=0jHsq36_NTU
+
+### License
+- Distributed under the GNU Affero General Public License v3.0 License. See `LICENSE` for more information.
 
 <img width="570" alt="Screenshot 2025-02-22 at 13 38 27" src="https://github.com/user-attachments/assets/fa469fe3-e2e3-4aa1-b2d7-5cb644da39dd" />
 
